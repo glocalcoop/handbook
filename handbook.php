@@ -7,6 +7,7 @@
 
 require_once dirname( __FILE__ ) . '/inc/callout-boxes.php';
 require_once dirname( __FILE__ ) . '/inc/glossary.php';
+require_once dirname( __FILE__ ) . '/inc/navigation.php';
 require_once dirname( __FILE__ ) . '/inc/table-of-contents.php';
 require_once dirname( __FILE__ ) . '/inc/email-post-changes.php';
 require_once dirname( __FILE__ ) . '/inc/watchlist.php';
@@ -19,9 +20,13 @@ WPorg_Handbook_Glossary::init();
  */
 class WPorg_Handbook_Init {
 
+	public static function get_post_types() {
+		return (array) apply_filters( 'handbook_post_types', array( 'handbook' ) );
+	}
+
 	static function init() {
 
-		$post_types = (array) apply_filters( 'handbook_post_types', array( 'handbook' ) );
+		$post_types = self::get_post_types();
 
 		new WPorg_Handbook_TOC( $post_types );
 
@@ -34,7 +39,7 @@ class WPorg_Handbook_Init {
 	}
 
 	static public function enqueue_styles() {
-		wp_enqueue_style( 'wporg-handbook-css', plugins_url( '/stylesheets/callout-boxes.css', __FILE__ ), array(), '20150507' );
+		wp_enqueue_style( 'wporg-handbook-css', plugins_url( '/stylesheets/callout-boxes.css', __FILE__ ), array(), '20160224' );
 	}
 
 	static public function enqueue_scripts() {
@@ -237,8 +242,8 @@ class WPorg_Handbook {
 	 * if that plugin is active.
 	 */
 	function disable_p2_resolved_posts_action_links() {
-		if ( ( $this->post_type == get_post_type() ) && class_exists( 'P2_Resolved_Posts' ) && is_object( P2_Resolved_Posts::$instance ) ) {
-			remove_filter( 'p2_action_links', array( P2_Resolved_Posts::$instance, 'p2_action_links' ), 100 );
+		if ( ( $this->post_type == get_post_type() ) && class_exists( 'P2_Resolved_Posts' ) && isset( $GLOBALS['p2_resolved_posts'] ) && is_object( $GLOBALS['p2_resolved_posts'] ) ) {
+			remove_filter( 'p2_action_links', array( P2_Resolved_Posts::instance(), 'p2_action_links' ), 100 );
 		}
 	}
 
