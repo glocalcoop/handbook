@@ -182,6 +182,9 @@ class WPorg_Handbook {
 			'public'            => true,
 			'show_ui'           => true,
 			'capability_type'   => 'handbook_page',
+			'capabilities' => array(
+            			'read'        => 'read_handbook_page',
+				),
 			'map_meta_cap'      => true,
 			'has_archive'       => true,
 			'hierarchical'      => true,
